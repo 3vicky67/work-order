@@ -1,0 +1,5 @@
+@EndUserText.label: 'to know more about service definition'
+define service ZSD_VICKY_WO {
+  expose ZC_VICKY_WO_HDR as WorkOrderHeader;
+  expose ZC_VICKY_WO_ITM as WorkOrderItem;
+}

@@ -1,0 +1,72 @@
+@Metadata.layer: #CORE
+
+@UI.headerInfo: {
+  typeName: 'Work Order',
+  typeNamePlural: 'Work Orders',
+  title: { type: #STANDARD, value: 'OrderId' },
+  description: { value: 'Description' }
+}
+
+annotate view ZC_VICKY_WO_HDR with
+{
+  @UI.facet: [
+    {
+      id: 'HeaderFacet',
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Work Order Details',
+      position: 10
+    },
+    {
+      id: 'ItemFacet',
+      type: #LINEITEM_REFERENCE,
+      label: 'Work Order Items',
+      position: 20,
+      targetElement: '_Items'
+    }
+  ]
+
+  // --- ADDED: Hide the calculated integer field ---
+  @UI.hidden: true
+  StatusCriticality;
+
+  // --- UPDATED: Expose Action Buttons on OrderId ---
+  @UI.selectionField: [{ position: 10 }]
+  @UI.lineItem: [
+    { position: 10, label: 'Order ID' },
+    { type: #FOR_ACTION, dataAction: 'setStarted', label: 'Started', position: 1 },
+    { type: #FOR_ACTION, dataAction: 'setOngoing', label: 'Ongoing', position: 2 },
+    { type: #FOR_ACTION, dataAction: 'setCompleted', label: 'Completed', position: 3 }
+  ]
+  @UI.identification: [
+    { position: 10 },
+    { type: #FOR_ACTION, dataAction: 'setStarted', label: 'Started', position: 1 },
+    { type: #FOR_ACTION, dataAction: 'setOngoing', label: 'Ongoing', position: 2 },
+    { type: #FOR_ACTION, dataAction: 'setCompleted', label: 'Completed', position: 3 }
+  ]
+  OrderId;
+
+  // --- UPDATED: Bind the Criticality and enable the icon ---
+  @UI.selectionField: [{ position: 20 }]
+  @UI.lineItem:       [{ position: 20, label : 'Status', criticality: 'StatusCriticality', criticalityRepresentation: #WITH_ICON }]
+  @UI.identification: [{ position: 20, criticality: 'StatusCriticality', criticalityRepresentation: #WITH_ICON }]
+  Status;
+
+  @UI.selectionField: [{ position: 30 }]
+  @UI.lineItem:       [{ position: 30, label : 'Priority' }]
+  @UI.identification: [{ position: 30 }]
+  Priority;
+
+  @UI.lineItem:       [{ position: 40, label : 'Description' }]
+  @UI.identification: [{ position: 40 }]
+  Description;
+
+  @UI.lineItem:       [{ position: 50 }]
+  @UI.identification: [{ position: 50 }]
+  AssignedTo;
+
+  @UI.identification: [{ position: 60 }]
+  CreatedBy;
+
+  @UI.identification: [{ position: 70 }]
+  CreatedAt;
+}
