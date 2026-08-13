@@ -1,0 +1,113 @@
+@Metadata.layer: #CORE
+
+@UI.headerInfo: {
+  typeName: 'Work Order',
+  typeNamePlural: 'Work Orders',
+  typeImageUrl: 'sap-icon://maintenance-task',
+  title: { type: #STANDARD, value: 'OrderId' },
+  description: { value: 'AssignedTo' }
+}
+
+annotate view ZC_VICKY_WO_HDR with
+{
+  /* ── FACETS (Object Page Layout) ── */
+  @UI.facet: [
+    {
+      id:             'GeneralInfoTab',
+      purpose:        #STANDARD,
+      type:           #COLLECTION,
+      label:          'General Information',
+      position:       10
+    },
+    {
+      id:             'FieldGroupCol1',
+      purpose:        #STANDARD,
+      type:           #FIELDGROUP_REFERENCE,
+      parentId:       'GeneralInfoTab',
+      label:          'Identifiers',
+      position:       10,
+      targetQualifier: 'Group1'
+    },
+    {
+      id:             'FieldGroupCol2',
+      purpose:        #STANDARD,
+      type:           #FIELDGROUP_REFERENCE,
+      parentId:       'GeneralInfoTab',
+      label:          'Routing Info',
+      position:       20,
+      targetQualifier: 'Group2'
+    },
+    {
+      id:             'FieldGroupCol3',
+      purpose:        #STANDARD,
+      type:           #FIELDGROUP_REFERENCE,
+      parentId:       'GeneralInfoTab',
+      label:          'Dates & Costs',
+      position:       30,
+      targetQualifier: 'Group3'
+    },
+    {
+      id:             'PassengerFacet',
+      purpose:        #STANDARD,
+      type:           #LINEITEM_REFERENCE,
+      label:          'Passengers',
+      position:       20,
+      targetElement:  '_Items' // Points to your child/item entity
+    }
+  ]
+
+  // --- Hidden Criticality Field ---
+  @UI.hidden: true
+  StatusCriticality;
+
+  // --- COLUMN 1: Order ID & Assigned To ---
+  @UI.selectionField: [{ position: 10 }]
+  @UI.lineItem: [
+    { position: 10, label: 'Order ID' },
+    { type: #FOR_ACTION, dataAction: 'setStarted', label: 'Started', position: 1 },
+    { type: #FOR_ACTION, dataAction: 'setOngoing', label: 'Ongoing', position: 2 },
+    { type: #FOR_ACTION, dataAction: 'setCompleted', label: 'Completed', position: 3 }
+  ]
+  @UI.fieldGroup:     [{ qualifier: 'Group1', position: 10 }]
+  @UI.identification: [
+    { position: 10 },
+    { type: #FOR_ACTION, dataAction: 'setStarted', label: 'Started', position: 1 },
+    { type: #FOR_ACTION, dataAction: 'setOngoing', label: 'Ongoing', position: 2 },
+    { type: #FOR_ACTION, dataAction: 'setCompleted', label: 'Completed', position: 3 }
+  ]
+  OrderId;
+
+  @UI.lineItem:       [{ position: 50 }]
+  @UI.fieldGroup:     [{ qualifier: 'Group1', position: 20 }]
+  @UI.identification: [{ position: 50 }]
+  AssignedTo;
+
+
+  // --- COLUMN 2: Description & Created By ---
+  @UI.lineItem:       [{ position: 40, label : 'Description' }]
+  @UI.fieldGroup:     [{ qualifier: 'Group2', position: 10 }]
+  @UI.identification: [{ position: 40 }]
+  Description;
+
+  @UI.fieldGroup:     [{ qualifier: 'Group2', position: 20 }]
+  @UI.identification: [{ position: 60 }]
+  CreatedBy;
+
+
+  // --- COLUMN 3: Priority, Status, & Created At ---
+  @UI.selectionField: [{ position: 30 }]
+  @UI.lineItem:       [{ position: 30, label : 'Priority' }]
+  @UI.fieldGroup:     [{ qualifier: 'Group3', position: 10 }]
+  @UI.identification: [{ position: 30 }]
+  Priority;
+
+  @UI.selectionField: [{ position: 20 }]
+  @UI.lineItem:       [{ position: 20, label : 'Status', criticality: 'StatusCriticality', criticalityRepresentation: #WITH_ICON }]
+  @UI.fieldGroup:     [{ qualifier: 'Group3', position: 20, criticality: 'StatusCriticality', criticalityRepresentation: #WITH_ICON }]
+  @UI.identification: [{ position: 20, criticality: 'StatusCriticality', criticalityRepresentation: #WITH_ICON }]
+  Status;
+
+  @UI.fieldGroup:     [{ qualifier: 'Group3', position: 30 }]
+  @UI.identification: [{ position: 70 }]
+  CreatedAt;
+}

@@ -1,0 +1,90 @@
+unmanaged implementation in class zbp1_vicky_wo_hdr unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_VICKY_WO_HDR alias WorkOrderHeader
+draft table zcit_v_wo_hdr_d
+lock master total etag LastChangedAt
+authorization master ( instance )
+etag master LastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  // --- Draft Actions ---
+  draft action Edit;
+  draft action Activate;
+  draft action Discard;
+  draft action Resume;
+
+  draft determine action Prepare {
+    validation validatePriority;
+    validation validateStatus;
+    validation WorkOrderItem~validateQuantity;
+  }
+
+  // --- Custom Actions for Status Buttons ---
+  action setStarted result [1] $self;
+  action setOngoing result [1] $self;
+  action setCompleted result [1] $self;
+
+  // --- Field Controls ---
+  field ( readonly ) CreatedBy, CreatedAt, LastChangedBy, LastChangedAt;
+  field ( readonly : update ) OrderId;
+  field ( readonly ) StatusCriticality;
+
+  // --- Determinations & Validations ---
+  determination setCreatedFields on modify { create; }
+  determination setChangedFields on modify { field Description, Priority, AssignedTo; }
+  validation validateStatus on save { create; update; }
+  validation validatePriority on save { create; update; }
+
+  association _Items { create; with draft; }
+
+  // --- Mapping to Database ---
+  mapping for zcitvicky_wo_hdr
+  {
+    OrderId       = order_id;
+    OrderType     = order_type;
+    Status        = status;
+    Priority      = priority;
+    Description   = description;
+    AssignedTo    = assigned_to;
+    CreatedBy     = created_by;
+    CreatedAt     = created_at;
+    LastChangedBy = last_changed_by;
+    LastChangedAt = last_changed_at;
+  }
+}
+
+define behavior for ZI_VICKY_WO_ITM alias WorkOrderItem
+draft table zcit_v_wo_itm_d
+lock dependent by _Header
+authorization dependent by _Header
+etag master LastChangedAt
+{
+  update;
+  delete;
+
+  // --- Field Controls ---
+  field ( readonly ) OrderId, ItemId, LastChangedAt;
+  field ( mandatory ) TaskDesc, Quantity;
+
+  validation validateQuantity on save { create; update; }
+
+  association _Header { with draft; }
+
+  // --- Mapping to Database ---
+  mapping for zcitvicky_wo_itm
+  {
+    OrderId       = order_id;
+    ItemId        = item_id;
+    EquipmentId   = equipment_id;
+    TaskDesc      = task_desc;
+    Material      = material;
+    Quantity      = quantity;
+    Unit          = unit;
+    LastChangedAt = last_changed_at;
+  }
+}

@@ -1,0 +1,31 @@
+projection;
+strict ( 2 );
+use draft;
+
+define behavior for ZC_VICKY_WO_HDR alias WorkOrderHeader
+{
+  use create;
+  use update;
+  use delete;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  // ---> ADD THESE 3 LINES <---
+  use action setStarted;
+  use action setOngoing;
+  use action setCompleted;
+
+  use association _Items { create; with draft; }
+}
+
+define behavior for ZC_VICKY_WO_ITM alias WorkOrderItem
+{
+  use update;
+  use delete;
+
+  use association _Header;
+}

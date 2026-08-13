@@ -1,0 +1,33 @@
+managed implementation in class zbp_vicky_eng unique;
+strict ( 2 );
+with draft; // Enables draft
+
+define behavior for ZI_VICKY_ENG_VH alias Engineer
+persistent table zcitvicky_eng       // <--- MUST be the real database table
+draft table zcitvicky_eng_d          // <--- MUST be the draft table
+lock master total etag LastChangedAt // <--- Required for draft
+authorization master ( instance )
+etag master LastChangedAt            // <--- Required for draft
+{
+  create;
+  update;
+  delete;
+
+  // --- Draft Actions Required for OData V4 ---
+  draft action Edit;
+  draft action Activate;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  field ( readonly : update ) EngineerName;
+  field ( readonly ) LastChangedAt;
+
+  mapping for zcitvicky_eng
+  {
+    EngineerName   = name;
+    Specialization = field;
+    Experience     = experience;
+    LastChangedAt  = last_changed_at;
+  }
+}

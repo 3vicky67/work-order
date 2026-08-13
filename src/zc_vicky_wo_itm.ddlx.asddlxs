@@ -1,0 +1,45 @@
+@Metadata.layer: #CORE
+
+@UI.headerInfo: {
+  typeName: 'Work Order Item',
+  typeNamePlural: 'Work Order Items',
+  title: { type: #STANDARD, value: 'ItemId' }
+}
+
+annotate view ZC_VICKY_WO_ITM with
+{
+  -- ADD THIS BLOCK HERE --
+  @UI.facet: [
+        {
+          id: 'ItemDetails',
+          purpose: #STANDARD,
+          type: #IDENTIFICATION_REFERENCE,
+          label: 'Item Information',
+          position: 10
+        }
+  ]
+
+  @UI.lineItem: [{ position: 10 }]
+  @UI.identification: [{ position: 10 }]
+  ItemId;
+
+  @UI.lineItem: [{ position: 20 }]
+  @UI.identification: [{ position: 20 }]
+  TaskDesc;
+
+  @UI.lineItem: [{ position: 30 }]
+  @UI.identification: [{ position: 30 }]
+  Material;
+
+  @UI.lineItem: [{ position: 40 }]
+  @UI.identification: [{ position: 40 }]
+  Quantity;
+
+  @UI.lineItem: [{ position: 50 }]
+  @UI.identification: [{ position: 50 }]
+  Unit;
+
+  @UI.lineItem: [{ position: 60 }]
+  @UI.identification: [{ position: 60 }]
+  EquipmentId;
+}
